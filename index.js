@@ -2,6 +2,7 @@ const domApp = document.querySelector(".app");
 const domTime = document.querySelector(".time");
 const domDate = document.querySelector(".date");
 const domCnDate = document.querySelector(".cn-date");
+const domWeather = document.querySelector(".weather");
 
 function geturl(url) {
   const arr = url.split("?");
@@ -78,11 +79,14 @@ const config = {
   fontSize: +(urlQuery.fs || 7),
   rotate: urlQuery.r,
   lang: urlQuery.l,
+  lat: urlQuery.lat,
+  lon: urlQuery.lon,
 };
 
 domTime.style.fontSize = config.fontSize + "rem";
 domDate.style.fontSize = config.fontSize / 2.5 + "rem";
 domCnDate.style.fontSize = config.fontSize / 4 + "rem";
+domWeather.style.fontSize = config.fontSize / 4 + "rem";
 domApp.style.cssText = `-webkit-transform: rotate(${
   config.rotate || 0
 }deg) translate3d(-50%,-50%,0)`;
@@ -91,3 +95,12 @@ render();
 setInterval(() => {
   render();
 }, 1000);
+
+// Initialize weather if coordinates are provided
+if (config.lat && config.lon && typeof weather !== 'undefined') {
+  weather.updateWeather(config.lat, config.lon, domWeather);
+  // Refresh weather every 1 hour
+  setInterval(() => {
+    weather.updateWeather(config.lat, config.lon, domWeather);
+  }, 3600000);
+}
