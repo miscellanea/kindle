@@ -3,7 +3,7 @@
 // Caches weather data for 1 hour in localStorage
 
 var weather = {
-  CACHE_KEY: 'kindle_weather_cache_v2', // v2 for Fahrenheit
+  CACHE_KEY: 'kindle_weather_cache_v3', // v3 for forecast
   CACHE_DURATION: 3600000, // 1 hour in milliseconds
 
   // Weather code to emoji and description mapping (Open-Meteo codes)
@@ -116,7 +116,9 @@ var weather = {
               'latitude=' + lat +
               '&longitude=' + lon +
               '&current=temperature_2m,weather_code' +
-              '&timezone=auto';
+              '&daily=temperature_2m_max,temperature_2m_min,weather_code' +
+              '&timezone=auto' +
+              '&forecast_days=3';
 
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
@@ -155,11 +157,33 @@ var weather = {
     var weatherCode = data.current.weather_code;
     var weatherInfo = this.getWeatherInfo(weatherCode);
 
-    return {
+    var result = {
       temp: tempF,
       icon: weatherInfo.icon,
       condition: weatherInfo.text
     };
+
+    // Add 2-day forecast if available
+    if (data.daily && data.daily.temperature_2m_max && data.daily.temperature_2m_min) {
+      result.forecast = [];
+      // Start from day 1 (tomorrow) and day 2 (day after)
+      for (var i = 1; i <= 2 && i < data.daily.time.length; i++) {
+        var maxC = data.daily.temperature_2m_max[i];
+        var minC = data.daily.temperature_2m_min[i];
+        var maxF = Math.round((maxC * 9/5) + 32);
+        var minF = Math.round((minC * 9/5) + 32);
+        var forecastCode = data.daily.weather_code[i];
+        var forecastInfo = this.getWeatherInfo(forecastCode);
+
+        result.forecast.push({
+          max: maxF,
+          min: minF,
+          icon: forecastInfo.icon
+        });
+      }
+    }
+
+    return result;
   },
 
   /**
@@ -243,9 +267,20 @@ var weather = {
    */
   displayWeather: function(weatherData, domElement) {
     if (domElement && weatherData) {
-      // Compact format: stack vertically to save horizontal space
-      domElement.innerHTML = weatherData.temp + '°F<br>' +
-                            weatherData.icon;
+      // Current weather
+      var html = weatherData.temp + '°F<br>' + weatherData.icon;
+
+      // Add 2-day forecast if available
+      if (weatherData.forecast && weatherData.forecast.length > 0) {
+        for (var i = 0; i < weatherData.forecast.length; i++) {
+          var day = weatherData.forecast[i];
+          html += '<br><span style="font-size:0.8em">' +
+                  day.max + '/' + day.min + '</span><br>' +
+                  day.icon;
+        }
+      }
+
+      domElement.innerHTML = html;
     }
   },
 
