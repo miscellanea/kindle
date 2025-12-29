@@ -271,9 +271,9 @@ var weather = {
       if (weatherData.forecast) {
         html += '<br><br>' + // Extra spacing before forecast
                 '<span style="font-size:0.6em;opacity:0.7">Tomorrow</span><br>' +
-                '<span style="font-size:0.8em">' +
-                weatherData.forecast.max + '/' + weatherData.forecast.min + '°F</span><br>' +
-                weatherData.forecast.icon;
+                '<span style="font-size:0.6em">' +
+                weatherData.forecast.max + '/' + weatherData.forecast.min + '°F<br>' +
+                weatherData.forecast.icon + '</span>';
       }
 
       domElement.innerHTML = html;
