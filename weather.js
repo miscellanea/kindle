@@ -243,9 +243,9 @@ var weather = {
    */
   displayWeather: function(weatherData, domElement) {
     if (domElement && weatherData) {
-      domElement.innerHTML = weatherData.temp + '°F ' +
-                            weatherData.icon + ' ' +
-                            weatherData.condition;
+      // Compact format: stack vertically to save horizontal space
+      domElement.innerHTML = weatherData.temp + '°F<br>' +
+                            weatherData.icon;
     }
   },
 
