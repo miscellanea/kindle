@@ -272,6 +272,7 @@ var weather = {
 
       // Add 2-day forecast if available
       if (weatherData.forecast && weatherData.forecast.length > 0) {
+        html += '<br>'; // Extra spacing before forecast
         for (var i = 0; i < weatherData.forecast.length; i++) {
           var day = weatherData.forecast[i];
           html += '<br><span style="font-size:0.8em">' +
