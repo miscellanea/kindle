@@ -150,12 +150,13 @@ var weather = {
       throw new Error('Invalid weather data');
     }
 
-    var temp = Math.round(data.current.temperature_2m);
+    var tempC = data.current.temperature_2m;
+    var tempF = Math.round((tempC * 9/5) + 32); // Convert C to F
     var weatherCode = data.current.weather_code;
     var weatherInfo = this.getWeatherInfo(weatherCode);
 
     return {
-      temp: temp,
+      temp: tempF,
       icon: weatherInfo.icon,
       condition: weatherInfo.text
     };
@@ -239,7 +240,7 @@ var weather = {
    */
   displayWeather: function(weatherData, domElement) {
     if (domElement && weatherData) {
-      domElement.innerHTML = weatherData.temp + '°C ' +
+      domElement.innerHTML = weatherData.temp + '°F ' +
                             weatherData.icon + ' ' +
                             weatherData.condition;
     }
