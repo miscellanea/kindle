@@ -162,7 +162,51 @@ var weather = {
   },
 
   /**
+   * Geocode city name to coordinates using Open-Meteo Geocoding API
+   */
+  geocodeCity: function(cityName, callback) {
+    var url = 'https://geocoding-api.open-meteo.com/v1/search?' +
+              'name=' + encodeURIComponent(cityName) +
+              '&count=1' +
+              '&language=en' +
+              '&format=json';
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          if (data.results && data.results.length > 0) {
+            var result = data.results[0];
+            callback(null, {
+              lat: result.latitude,
+              lon: result.longitude,
+              name: result.name,
+              country: result.country
+            });
+          } else {
+            callback(new Error('City not found'));
+          }
+        } catch (e) {
+          callback(new Error('Failed to parse geocoding data'));
+        }
+      } else {
+        callback(new Error('Geocoding API request failed'));
+      }
+    };
+
+    xhr.onerror = function() {
+      callback(new Error('Network error during geocoding'));
+    };
+
+    xhr.send();
+  },
+
+  /**
    * Main function to update weather display
+   * Can accept either lat/lon OR cityName
    */
   updateWeather: function(lat, lon, domElement) {
     if (!domElement) {
@@ -199,5 +243,42 @@ var weather = {
                             weatherData.icon + ' ' +
                             weatherData.condition;
     }
+  },
+
+  /**
+   * Update weather by city name (geocodes first, then fetches weather)
+   */
+  updateWeatherByCity: function(cityName, domElement) {
+    if (!domElement || !cityName) {
+      return;
+    }
+
+    var self = this;
+
+    // Check cache first
+    var cached = this.getWeatherFromCache();
+    if (cached) {
+      this.displayWeather(cached, domElement);
+    }
+
+    // Geocode city to get coordinates
+    this.geocodeCity(cityName, function(error, location) {
+      if (error) {
+        console.error('Geocoding failed:', error);
+        return;
+      }
+
+      // Now fetch weather using the coordinates
+      self.fetchWeather(location.lat, location.lon, function(error, weatherData) {
+        if (error) {
+          console.error('Weather fetch failed:', error);
+          return;
+        }
+
+        // Save to cache and display
+        self.saveWeatherToCache(weatherData);
+        self.displayWeather(weatherData, domElement);
+      });
+    });
   }
 };

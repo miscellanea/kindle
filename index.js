@@ -79,6 +79,7 @@ const config = {
   fontSize: +(urlQuery.fs || 7),
   rotate: urlQuery.r,
   lang: urlQuery.l,
+  city: urlQuery.city,
   lat: urlQuery.lat,
   lon: urlQuery.lon,
 };
@@ -96,11 +97,19 @@ setInterval(() => {
   render();
 }, 1000);
 
-// Initialize weather if coordinates are provided
-if (config.lat && config.lon && typeof weather !== 'undefined') {
-  weather.updateWeather(config.lat, config.lon, domWeather);
-  // Refresh weather every 1 hour
-  setInterval(() => {
+// Initialize weather if city or coordinates are provided
+if (typeof weather !== 'undefined' && domWeather) {
+  if (config.city) {
+    // Use city name (takes priority over lat/lon)
+    weather.updateWeatherByCity(config.city, domWeather);
+    setInterval(() => {
+      weather.updateWeatherByCity(config.city, domWeather);
+    }, 3600000);
+  } else if (config.lat && config.lon) {
+    // Use coordinates
     weather.updateWeather(config.lat, config.lon, domWeather);
-  }, 3600000);
+    setInterval(() => {
+      weather.updateWeather(config.lat, config.lon, domWeather);
+    }, 3600000);
+  }
 }
