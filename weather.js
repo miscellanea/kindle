@@ -275,7 +275,7 @@ var weather = {
         for (var i = 0; i < weatherData.forecast.length; i++) {
           var day = weatherData.forecast[i];
           html += '<br><span style="font-size:0.8em">' +
-                  day.max + '/' + day.min + '</span><br>' +
+                  day.max + '/' + day.min + '°F</span><br>' +
                   day.icon;
         }
       }
