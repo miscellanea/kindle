@@ -264,7 +264,7 @@ var weather = {
   displayWeather: function(weatherData, domElement) {
     if (domElement && weatherData) {
       // Today's weather inline (temp and icon on same row)
-      var html = weatherData.temp + '°F ' + weatherData.icon;
+      var html = '今天 ' + weatherData.temp + '°F ' + weatherData.icon;
 
       // Tomorrow's forecast at right edge, aligned with today
       if (weatherData.forecast) {
