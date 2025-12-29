@@ -263,17 +263,15 @@ var weather = {
    */
   displayWeather: function(weatherData, domElement) {
     if (domElement && weatherData) {
-      // Current weather with label
-      var html = '<span style="font-size:0.6em;opacity:0.7">Today</span><br>' +
-                 weatherData.temp + '°F<br>' + weatherData.icon;
+      // Today's weather inline (temp and icon on same row)
+      var html = weatherData.temp + '°F ' + weatherData.icon;
 
-      // Add tomorrow's forecast if available
+      // Tomorrow's forecast at bottom right, all on one line
       if (weatherData.forecast) {
-        html += '<br><br>' + // Extra spacing before forecast
-                '<span style="font-size:0.6em;opacity:0.7">Tomorrow</span><br>' +
-                '<span style="font-size:0.6em">' +
-                weatherData.forecast.max + '/' + weatherData.forecast.min + '°F<br>' +
-                weatherData.forecast.icon + '</span>';
+        html += '<div style="position:absolute;bottom:-12rem;right:0;font-size:0.6em;white-space:nowrap">' +
+                '<span style="opacity:0.7">Tomorrow</span> ' +
+                weatherData.forecast.max + '/' + weatherData.forecast.min + '°F ' +
+                weatherData.forecast.icon + '</div>';
       }
 
       domElement.innerHTML = html;
