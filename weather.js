@@ -3,7 +3,7 @@
 // Caches weather data for 1 hour in localStorage
 
 var weather = {
-  CACHE_KEY: 'kindle_weather_cache',
+  CACHE_KEY: 'kindle_weather_cache_v2', // v2 for Fahrenheit
   CACHE_DURATION: 3600000, // 1 hour in milliseconds
 
   // Weather code to emoji and description mapping (Open-Meteo codes)
