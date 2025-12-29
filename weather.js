@@ -166,8 +166,11 @@ var weather = {
    * Geocode city name to coordinates using Open-Meteo Geocoding API
    */
   geocodeCity: function(cityName, callback) {
+    // If city includes comma (e.g., "New York,NY"), use only the city part
+    var searchName = cityName.split(',')[0].trim();
+
     var url = 'https://geocoding-api.open-meteo.com/v1/search?' +
-              'name=' + encodeURIComponent(cityName) +
+              'name=' + encodeURIComponent(searchName) +
               '&count=1' +
               '&language=en' +
               '&format=json';
