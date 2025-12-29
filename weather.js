@@ -268,7 +268,7 @@ var weather = {
 
       // Tomorrow's forecast at right edge, aligned with today
       if (weatherData.forecast) {
-        html += '<span style="position:absolute;right:0;font-size:1em;white-space:nowrap;text-align:right">' +
+        html += '<span style="position:absolute;right:0;font-size:1em;white-space:nowrap;text-align:right;opacity:0.7">' +
                 '明天 ' +
                 weatherData.forecast.max + '/' + weatherData.forecast.min + '°F ' +
                 weatherData.forecast.icon + '</span>';
