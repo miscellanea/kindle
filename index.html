@@ -35,11 +35,14 @@
 
     .app {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      /* transform set by JS: translate(-50%, -50%) rotate(Ndeg); */
-      /* transform-origin should be 50% 50% for this centering and rotation */
-      /* -webkit-transform-origin: 0 0; /* This was in original, but 50% 50% is better for center-rotate */
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      padding: 2rem;
+      box-sizing: border-box;
+      /* transform set by JS: rotate(Ndeg); */
+      transform-origin: 50% 50%;
       transition: transform 0.3s ease; /* Smooth transition for OLED movement */
     }
 
